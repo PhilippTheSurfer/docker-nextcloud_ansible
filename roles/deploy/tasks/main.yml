@@ -1,0 +1,5 @@
+---
+- name: Ensure directories for Nextcloud is present
+  file:
+    path: "/opt/nextcloud"
+    state: directory
