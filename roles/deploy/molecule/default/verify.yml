@@ -1,0 +1,30 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: Check if Nextcloud directory exists
+      stat:
+        path: /opt/nextcloud
+      register: nextcloud_dir
+    - name: Ensure Nextcloud directory exists
+      assert:
+        that:
+          - nextcloud_dir.stat.exists
+    
+    - name: Check if docker-compose file is deployed
+      stat:
+        path: /opt/nextcloud/docker-compose.yml
+      register: compose_file
+    - name: Ensure docker-compose file is deployed
+      assert:
+        that:
+          - compose_file.stat.exists
+
+    - name: Check if Dockerfile is deployed
+      stat:
+        path: /opt/nextcloud/Dockerfile
+      register: dockerfile
+    - name: Ensure Dockerfile is deployed
+      assert:
+        that:
+          - dockerfile.stat.exists
