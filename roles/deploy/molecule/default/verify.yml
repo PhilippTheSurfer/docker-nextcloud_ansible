@@ -6,6 +6,7 @@
       stat:
         path: /opt/nextcloud
       register: nextcloud_dir
+
     - name: Ensure Nextcloud directory exists
       assert:
         that:
@@ -15,6 +16,7 @@
       stat:
         path: /opt/nextcloud/docker-compose.yml
       register: compose_file
+
     - name: Ensure docker-compose file is deployed
       assert:
         that:
@@ -24,6 +26,7 @@
       stat:
         path: /opt/nextcloud/Dockerfile
       register: dockerfile
+      
     - name: Ensure Dockerfile is deployed
       assert:
         that:
