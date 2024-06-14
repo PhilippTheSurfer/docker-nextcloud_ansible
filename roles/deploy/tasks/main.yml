@@ -24,3 +24,12 @@
     owner: 'root'
     group: 'docker'
 
+- name: Deploy Docker Compose file 
+  template:
+    src: docker-compose.yml.j2
+    dest: "/opt/nextcloud/docker-compose.yml"
+
+- name: Deploy .env file
+  template:
+    src: .env.j2
+    dest: "/opt/nextcloud/.env"
