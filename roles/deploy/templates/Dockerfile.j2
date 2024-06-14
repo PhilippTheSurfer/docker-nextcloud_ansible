@@ -1,0 +1,8 @@
+FROM nextcloud:{{ item.version }}-apache
+
+RUN apt-get update && \
+    apt-get install -y libbz2-dev && \
+    docker-php-ext-install bz2
+
+RUN a2enmod rewrite && \
+    a2enmod env
