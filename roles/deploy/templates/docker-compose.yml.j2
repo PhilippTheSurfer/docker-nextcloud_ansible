@@ -15,6 +15,9 @@ services:
       REDIS_HOST_PASSWORD: ${REDIS_PASSWORD}
       PHP_MEMORY_LIMIT: 1024M
       PHP_UPLOAD_LIMI: 40G
+    depends_on:
+      - nextcloud-mysql
+      - nextcloud-redis
     links:
       - nextcloud-mysql
       - nextcloud-redis
@@ -36,7 +39,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     container_name: nextcloud-mysql
     user: "mysql"
     restart: unless-stopped
