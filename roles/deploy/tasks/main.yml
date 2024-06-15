@@ -1,7 +1,7 @@
 ---
-- name: import variables
-  vars_file: 
-    - ../../group_vars/all.yml
+- name: Import variables
+  include_vars:
+    file: "../../group_vars/all.yml"
 
 
 - name: Ensure directories for Nextcloud is present
