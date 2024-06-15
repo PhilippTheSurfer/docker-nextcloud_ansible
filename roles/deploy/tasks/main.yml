@@ -1,0 +1,49 @@
+---
+- name: Ensure directories for Nextcloud is present
+  file:
+    path: "/opt/nextcloud"
+    state: directory
+
+- name: Ensure directory for Nextcloud Data is present
+  file:
+    path: "/opt/nextcloud/data"
+    state: directory
+    owner: 'root'
+    group: 'docker'
+
+- name: Create Database directory for MySQL
+  file: 
+    path: "/opt/nextcloud/data/nextcloud-db"
+    state: directory
+    owner: '999'
+    group: '999'
+    mode: '0755'
+
+- name: Create HTML Data directory for Nextcloud
+  file: 
+    path: "/opt/nextcloud/data/nextcloud-data"
+    state: directory
+    owner: 'root'
+    group: 'docker'
+
+- name: Deploy Docker Compose file 
+  template:
+    src: docker-compose.yml.j2
+    dest: "/opt/nextcloud/docker-compose.yml"
+    owner: 'root'
+    group: 'docker'
+
+- name: Deploy .env file
+  template:
+    src: .env.j2
+    dest: "/opt/nextcloud/.env"
+    owner: 'root'
+    group: 'docker'
+
+- name: Deploy Dockerfile
+  template:
+    src: Dockerfile.j2
+    dest: "/opt/nextcloud/Dockerfile"
+    owner: 'root'
+    group: 'docker'
+  notify: docker run
