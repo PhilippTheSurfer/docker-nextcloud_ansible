@@ -9,7 +9,7 @@ lint: |
   ansible-lint
 platforms:
   - name: instance
-    image: "localhost/debian12:test"
+    image: "philipptheserver/debian12-npm-anisble:latest"
     cgroupns_mode: host
     command: /lib/systemd/systemd
     volumes:
