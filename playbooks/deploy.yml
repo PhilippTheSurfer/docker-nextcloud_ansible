@@ -1,7 +1,7 @@
 ---
 - name: deploy Nextcloud
   hosts: all
-  become: yes
+  become: true
   vars_files:
     - ../vault.yml
     - ../group_vars/all.yml
