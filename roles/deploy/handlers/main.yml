@@ -1,5 +1,14 @@
 ---
 - name: docker run
-  command: docker compose up -d --force-recreate
+  shell: docker compose up -d
   args:
     chdir: "/opt/nextcloud"
+  register: docker_run_result
+  failed_when: docker_run_result.rc != 0
+  changed_when: docker_run_result.rc == 0
+  ignore_errors: no
+
+- name: Debug docker run result
+  debug:
+    var: docker_run_result
+  when: docker_run_result.rc != 0
