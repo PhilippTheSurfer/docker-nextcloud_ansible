@@ -1,46 +1,39 @@
 FROM debian:bookworm
+LABEL maintainer="Jeff Geerling"
 
-LABEL maintainer="Michael Maffait"
-LABEL org.opencontainers.image.source="https://github.com/Pandemonium1986/docker-debian12"
-
-# Configure environment variables
-ENV LC_ALL=de_DE.UTF-8
-ENV LANG=de_DE.UTF-8
-ENV LANGUAGE=de_DE.UTF-8
-ENV PYTHONIOENCODING=utf8
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Systemd configuration
-STOPSIGNAL SIGRTMIN+3
-ENV container=docker
+ENV pip_packages "ansible cryptography"
 
-# Install dependencies
-RUN apt-get update && \
-  apt-get install --yes --no-install-recommends \
-  build-essential \
-  locales \
-  locales-all \
-  openssh-server \
-  python3-dev \
-  python3-pip \
-  python3-setuptools \
-  python3-wheel \
-  systemd && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Install dependencies.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       sudo systemd systemd-sysv \
+       build-essential wget libffi-dev libssl-dev procps \
+       python3-pip python3-dev python3-setuptools python3-wheel python3-apt \
+       iproute2 \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -Rf /usr/share/doc && rm -Rf /usr/share/man \
+    && apt-get clean
 
-# Remove systemd target
-RUN rm -rf /lib/systemd/system/multi-user.target.wants/* ; \
-  rm -rf /etc/systemd/system/*.wants/* ; \
-  rm -rf /lib/systemd/system/local-fs.target.wants/* ; \
-  rm -rf /lib/systemd/system/sockets.target.wants/*udev* ; \
-  rm -rf /lib/systemd/system/sockets.target.wants/*initctl* ; \
-  rm -rf /lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup* ; \
-  rm -rf /lib/systemd/system/systemd-update-utmp*
+# Allow installing stuff to system Python.
+RUN rm -f /usr/lib/python3.11/EXTERNALLY-MANAGED
 
-#RUN for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; \
-#  do apt-get remove $pkg; \
-#  done
+# Upgrade pip to latest version.
+RUN pip3 install --upgrade pip
+
+# Install Ansible via pip.
+RUN pip3 install $pip_packages
+
+COPY initctl_faker .
+RUN chmod +x initctl_faker && rm -fr /sbin/initctl && ln -s /initctl_faker /sbin/initctl
+
+# Install Ansible inventory file.
+RUN mkdir -p /etc/ansible
+RUN echo "[local]\nlocalhost ansible_connection=local" > /etc/ansible/hosts
+
+# Make sure systemd doesn't start agettys on tty[1-6].
+RUN rm -f /lib/systemd/system/multi-user.target.wants/getty.target
 
 RUN apt-get update  && \
   apt-get install --yes ca-certificates curl  && \
@@ -59,6 +52,7 @@ RUN apt-get install --yes docker-ce docker-ce-cli containerd.io docker-buildx-pl
 
 WORKDIR /
 
+VOLUME ["/sys/fs/cgroup"]
 VOLUME [ "/tmp", "/run" ]
 
 CMD ["/lib/systemd/systemd"]
