@@ -1,1 +1,9 @@
 version: '25.0.1'
+
+redis_version: '7.2.5'
+
+mysql_version: '8.2.0'
+
+php_memory_limit: '1024M'
+
+php_upload_limit: '40G'
