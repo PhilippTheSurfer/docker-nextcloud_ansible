@@ -1,2 +1,9 @@
 ---
-- name: 
+- name: Verify
+  hosts: all
+  tasks:
+  - name: Check if containers are running
+    docker_container:
+      name: nextcloud
+      state: running
+    register: result
