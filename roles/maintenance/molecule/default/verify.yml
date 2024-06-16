@@ -1,9 +1,24 @@
 ---
 - name: Verify
   hosts: all
+  become: true
   tasks:
-  - name: Check if containers are running
-    docker_container:
-      name: nextcloud
-      state: running
-    register: result
+    - name: Check if containers are running
+      docker_container:
+        name: nextcloud
+        state: running
+      register: result
+
+    - name: Check if database container is running
+      docker_container:
+        name: nextcloud-mysql
+        state: running
+        healthcheck:
+          test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      register: result
+
+    - name: Check if redis container is running
+      docker_container:
+        name: Redis
+        state: running
+      register: result
