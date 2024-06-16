@@ -1,0 +1,29 @@
+---
+- name: Import variables
+  include_vars:
+    file: "../../group_vars/all.yml"
+
+- name: Stop Nextcloud containers
+  command: docker compose down
+  args:
+    chdir: "/opt/nextcloud"
+
+- name: Update Docker Compose file 
+  template:
+    src: docker-compose.yml.j2
+    dest: "/opt/nextcloud/docker-compose.yml"
+    owner: 'root'
+    group: 'docker'
+
+- name: Update Dockerfile
+  template:
+    src: Dockerfile.j2
+    dest: "/opt/nextcloud/Dockerfile"
+    owner: 'root'
+    group: 'docker'
+
+- name: Start Nextcloud containers
+  command: docker compose up -d
+  args:
+    chdir: "/opt/nextcloud"
+  
