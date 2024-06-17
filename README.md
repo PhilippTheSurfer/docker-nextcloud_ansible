@@ -23,17 +23,23 @@ Python 3.11+
 │   ├── deploy/
 │   │   ├── tasks/
 │   │   ├── handlers/
-│   │   ├── templates/
-│   │   └── vars/
+│   │   ├── molecule/
+│   │   │   └── default/
+│   │   │       ├── converge.yml
+│   │   │       ├── molecule.yml
+│   │   │       └── prepare.yml
+│   │   └── templates/
 │   ├── maintenance/
-│   │   └── tasks/
+│   │   ├── tasks/
+│   │   ├── handlers/
+│   │   ├── molecule/
+│   │   │   └── default/
+│   │   │       ├── converge.yml
+│   │   │       ├── molecule.yml
+│   │   │       └── prepare.yml
+│   │   └── templates/
 │   ├── backup/
-│   │   └── tasks/
-├── molecule/
-│   └── default/
-│       ├── converge.yml
-│       ├── molecule.yml
-│       └── prepare.yml
+│       └── tasks/
 └── playbook.yml
 
 ```
@@ -65,6 +71,8 @@ To deploy Nextcloud, run the following command:
 ```bash
 ansible-playbook playbooks/deploy.yml --ask-vault-pass
 ```
+
+### Ansible Vault
 
 I recommand using *ansible vault*. Atleast the playbook already includes one. Create it in the repositorys root directory with the command:
 ```bash
@@ -102,7 +110,10 @@ Ensure your `molecule/default/molecule.yml` is configured to use the custom Dock
     molecule destroy
     ```
 
-# Other Roles
+# Roles
+## Deploy Role
+Deploys a standard setup of nextcloud with a nextcloud-apache image, redis and mysql. No extra configuration is done.
+
 ## Maintenance Role
 The maintenance role includes tasks for routine maintenance of the Nextcloud instance, such as updating software and cleaning up logs.
 
