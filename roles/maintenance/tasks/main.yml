@@ -3,6 +3,12 @@
   include_vars:
     file: "../../group_vars/all.yml"
 
+
+- name: Make sure the Frontproxy is running
+  command: docker compose up -d
+  args:
+    chdir: "/opt/frontproxy"
+
 - name: Stop Nextcloud containers
   command: docker compose down
   args:

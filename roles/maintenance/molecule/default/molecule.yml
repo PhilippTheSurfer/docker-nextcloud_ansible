@@ -9,7 +9,7 @@ lint: |
   ansible-lint
 platforms:
   - name: instance
-    image: "philipptheserver/debian12-npm-ansible:latest"
+    image: "dockerreg.gruppe.ai/debian12-npm-ansible:latest"
     cgroupns_mode: host
     command: /lib/systemd/systemd
     volumes:
