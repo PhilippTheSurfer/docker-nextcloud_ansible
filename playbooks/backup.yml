@@ -1,6 +1,6 @@
 ---
 - name: backup Nextcloud
-  hosts: server
+  hosts: all
   become: true
   vars_files:
     - ../vault.yml
