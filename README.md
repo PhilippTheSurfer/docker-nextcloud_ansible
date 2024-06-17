@@ -7,10 +7,28 @@ This repository contains Ansible roles for deploying, maintaining, and backing u
 - **backup**: Handles backing up the Nextcloud data and database.
 
 ## Prerequisites
-Ansible 2.9+
-Docker and Docker Compose
-Molecule 3.0+
-Python 3.11+
+- Ansible 2.9+
+- Docker and Docker Compose
+- Molecule 3.0+
+- Python 3.11+
+
+Run the following commands before editing code:
+```bash
+python3 -m venv env
+```
+To create a python virtual environment.
+```bash
+source env/bin/activate
+```
+Only for Linux. If you are running windows `./env/lib/activate` will do the trick.
+```bash
+pip install -r requirements.txt
+```
+To install molecule and python dependence. 
+```bash
+ansible-galaxy collection install -r requirements.yml
+```
+To install the ansible archive module to run the backup playbook.
 
 ## Repository Structure
 
