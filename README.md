@@ -80,6 +80,26 @@ ansible-vault create vault.yml
 ```
 Now you can store your server passwords secure.
 
+**Example `vault.yml`:**
+```yml
+vault_ansible_password: "somesecurepassword"
+```
+
+### Example `inventories/host.yml`
+I like to use the yml way of managing my hosts. Below is a simple example how to setup a inventory. Be care full what you name it though since the default name is set in the `ansible.cfg` to be `inventories/hosts.yml`. 
+
+**Example `inventories/host.yml`:** 
+```yml
+all:
+  hosts:
+    127.1.1.1:
+      ansible_user: username # provide the username
+      # ansible_ssh_private_key_file: ~/.ssh/serversshkey # in case you use ssh key (you should)
+      ansible_become_pass: "{{ vault_ansible_password }}" #variable defiened in vault.yml that points to the password of the user
+      ansible_become_method: sudo
+      ansible_port: 22
+```
+
 # Testing with Molecule
 ### Building the Docker Image
 Use the Dockerfile in the `roles/deploy` directory to build a testing image.
