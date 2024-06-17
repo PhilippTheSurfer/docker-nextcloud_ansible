@@ -71,17 +71,15 @@ Ensure the `ansible.cfg` file is present in the root of your project directory w
 [defaults]
 inventory = ./inventories/hosts.yml
 roles_path = ./roles
-remote_tmp = /tmp/.ansible/tmp
-retry_files_enabled = False
 ```
 
 # Inventory
 Define your inventory in `inventories/hosts.yml` to specify the target hosts for Ansible playbooks.
 
-# Using the Deploy Role
+# Using the Roles
 ## Setup
-1. **Define Variables**: Ensure all required variables are set in `roles/deploy/vars/main.yml`.
-2. **Templates**: Customize the templates in `roles/deploy/templates/` as needed.
+1. **Define Variables**: Ensure all required variables are set in `group_vars/all.yml`.
+2. **Templates**: Customize the templates in `roles/{{ roles }}/templates/` as needed.
 
 # Running the Playbook
 
@@ -124,7 +122,7 @@ Use the Dockerfile in the `roles/deploy` directory to build a testing image.
 
 Build the Docker image:
 ```bash
-docker build -t localhost/debian12:test .
+docker build -t localhost/debian12-ansible:latest .
 ```
 
 ## Configuring Molecule
@@ -133,7 +131,7 @@ Ensure your `molecule/default/molecule.yml` is configured to use the custom Dock
 ## Running Molecule Tests
 1. Create instances:
     ```bash
-    molecule create
+    molecule create | tee molecule_create.log
     ```
 2. Run converge:
     ```bash
@@ -141,7 +139,7 @@ Ensure your `molecule/default/molecule.yml` is configured to use the custom Dock
     ```
 3. Verify the Setup:
     ```bash
-    molecule verify
+    molecule verify | tee molecule_verify.log
     ```
 4. Destroy instance:
     ```bash
