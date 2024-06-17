@@ -1,0 +1,30 @@
+---
+- name: Get current time
+  set_fact:
+    currenttime: "{{ ansible_date_time.date }}"
+
+- name: Backup the data directory
+  copy:
+    src: "/opt/nextcloud/data"
+    dest: "/opt/nextcloud/backup-data-{{ currenttime }}"
+    remote_src: true
+
+- name: Remove the mysql.sock file if it exists
+  file:
+    path: "/opt/nextcloud/backup-data-{{ currenttime }}/data/nextcloud-db/mysql.sock"
+    state: absent
+  become: true
+  ignore_errors: true
+
+- name: Zip the file
+  community.general.archive: 
+    path: "/opt/nextcloud/backup-data-{{ currenttime }}"
+    dest: "/opt/nextcloud/backup-data-{{ currenttime }}.zip"
+    format: zip
+  become: true
+
+- name: Remove the non-zipped backup directory
+  file:
+    path: "/opt/nextcloud/backup-data-{{ currenttime }}"
+    state: absent
+  become: true
