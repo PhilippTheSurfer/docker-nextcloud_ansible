@@ -1,0 +1,72 @@
+services:
+  nextcloud:
+    build: .
+    container_name: nextcloud
+    restart: unless-stopped
+    volumes:
+      - /opt/nextcloud/data/nextcloud-data:/var/www/html
+    environment:
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_HOST: nextcloud-mysql
+      DB_PORT: 3306
+      REDIS_HOST: Redis
+      REDIS_HOST_PASSWORD: ${REDIS_PASSWORD}
+      PHP_MEMORY_LIMIT: {{ php_memory_limit }}
+      PHP_UPLOAD_LIMI: {{ php_upload_limit }}
+    depends_on:
+      - nextcloud-mysql
+      - nextcloud-redis
+    links:
+      - nextcloud-mysql
+      - nextcloud-redis
+    networks:
+      frontproxy_fnet:
+        ipv4_address: 172.20.20.20
+      backend:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024m"
+
+
+  nextcloud-mysql:
+    image: mysql:{{ mysql_version }}
+    volumes:
+      - /opt/nextcloud/data/nextcloud-db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    container_name: nextcloud-mysql
+    user: "mysql"
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024m"
+    networks:
+      - backend
+
+  nextcloud-redis:
+    image: redis:{{ redis_version }}-alpine
+    container_name: Redis
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1024m"
+    networks:
+      - backend
+
+networks:
+  frontproxy_fnet:
+     external: true
+  backend:
+    name: nextcloud_backend
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"

@@ -1,0 +1,4 @@
+docker
+molecule
+molecule-plugins
+molecule-docker
