@@ -1,0 +1,6 @@
+---
+mysql_local_user: "local_db_user"        # Local MySQL user
+mysql_local_password: "local_db_password" # Local MySQL password
+mysql_database: "database_name"           # Name of the database to dump
+
+mysql_root_password: "root_password"      # MySQL root password for the Docker container

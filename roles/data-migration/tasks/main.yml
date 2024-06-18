@@ -1,0 +1,42 @@
+---
+- name: Dump local MySQL database on source server
+  hosts: source
+  tasks:
+    - name: Create database dump
+      command: mysqldump -u {{ mysql_local_user }} -p'{{ mysql_local_password }}' {{ mysql_database }} > /tmp/{{ mysql_database }}.sql
+      register: dump_local_db
+      changed_when: dump_local_db.rc != 0
+
+- name: Copy database dump to destination server
+  hosts: source
+  tasks:
+    - name: Copy dump file to destination server
+      copy:
+        src: /tmp/{{ mysql_database }}.sql
+        dest: /tmp/{{ mysql_database }}.sql
+        remote_src: yes
+      delegate_to: dest
+      register: copy_dump
+      changed_when: False
+
+- name: Restore the database in the Docker container
+  hosts: dest
+  become: true
+  tasks:
+    - name: Check if MySQL container is running
+      shell: docker ps --filter "name=mysql_container" --format "{{ '{{.Names}}' }}"
+      register: mysql_container_status
+      changed_when: False
+
+    - name: Restore MySQL database
+      command: docker exec -i mysql_container mysql -u root -p'{{ mysql_root_password }}' {{ mysql_database }} < /tmp/{{ mysql_database }}.sql
+      when: "'mysql_container' in mysql_container_status.stdout"
+      register: restore_db
+      changed_when: restore_db.changed
+
+    - name: Clean up the dump file
+      file:
+        path: /tmp/{{ mysql_database }}.sql
+        state: absent
+      when: restore_db.changed
+      changed_when: False

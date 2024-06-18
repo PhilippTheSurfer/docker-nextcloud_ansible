@@ -2,41 +2,49 @@
 
 This repository contains Ansible roles for deploying, maintaining, and backing up a Nextcloud Docker instance. The roles included are:
 
-- **deploy**: Sets up and deploys Nextcloud using Docker and Docker Compose.
-- **maintenance**: Contains tasks for routine maintenance of the Nextcloud instance.
-- **backup**: Handles backing up the Nextcloud data and database.
+## Deploy Role
+Deploys a standard setup of nextcloud with a nextcloud-apache image, redis and mysql. No extra configuration is done.
+
+## Maintenance Role
+The maintenance role includes tasks for routine maintenance of the Nextcloud instance, such as updating software and cleaning up logs.
+
+## Backup Role
+The backup role includes tasks for backing up Nextcloud data and databases, ensuring data integrity and security.
+
+## Data-migrate Role
+Creates a dumb of a localy or nativ running mysql instance and deployes it in a docker mysql container.
 
 ## Prerequisites
-- Ansible 2.9+
-- Docker and Docker Compose
-- Molecule 3.0+
-- Python 3.11+
+- [Ansible 2.9+](https://docs.ansible.com/)
+- [Docker and Docker Compose](https://docs.docker.com/)
+- [Molecule 3.0+](https://ansible.readthedocs.io/projects/molecule/)
+- [Python 3.11+](https://realpython.com/installing-python/)
 
-Run the following commands before editing code:
+### create local env and install dependences:
+Run the following commands before editing code to run the python env and install ansible-molecule:
 ```bash
 python3 -m venv env
-```
-To create a python virtual environment.
-```bash
 source env/bin/activate
-```
-Only for Linux. If you are running windows `./env/lib/activate` will do the trick.
-```bash
 pip install -r requirements.txt
 ```
-To install molecule and python dependence. 
+
+To install the ansible.community.archive modul.
 ```bash
 ansible-galaxy collection install -r requirements.yml
 ```
-To install the ansible archive module to run the backup playbook.
+
 
 ## Repository Structure
 
 ```
 .
-├── ansible.cfg
+├── BuildDockerTestImage/
+│   ├── Dockerfile
+│   └── initctl_faker
+├── group_vars/
 ├── inventories/
 │   └── hosts.yml
+├── playbooks/
 ├── roles/
 │   ├── deploy/
 │   │   ├── tasks/
@@ -57,9 +65,14 @@ To install the ansible archive module to run the backup playbook.
 │   │   │       └── prepare.yml
 │   │   └── templates/
 │   ├── backup/
-│       └── tasks/
-└── playbook.yml
-
+│   │   └── tasks/
+│   └── migration/
+│       ├── tasks/
+│       └── vars/
+├── ansible.cfg
+├── requirements.txt
+├── requirements.yml
+└── vault.yml
 ```
 
 ## Configuration
@@ -116,7 +129,7 @@ all:
       ansible_port: 22
 ```
 
-# Testing with Molecule
+# Testing with [Molecule](https://ansible.readthedocs.io/projects/molecule/)
 ### Building the Docker Image
 Use the Dockerfile in the `roles/deploy` directory to build a testing image.
 
@@ -146,24 +159,14 @@ Ensure your `molecule/default/molecule.yml` is configured to use the custom Dock
     molecule destroy
     ```
 
-# Roles
-## Deploy Role
-Deploys a standard setup of nextcloud with a nextcloud-apache image, redis and mysql. No extra configuration is done.
-
-## Maintenance Role
-The maintenance role includes tasks for routine maintenance of the Nextcloud instance, such as updating software and cleaning up logs.
-
-## Backup Role
-The backup role includes tasks for backing up Nextcloud data and databases, ensuring data integrity and security.
 
 # Contributing
 Feel free to open issues or submit pull requests with improvements or fixes. Contributions are always welcome!
 
 # Good to know
 
-1. Always use a python virtual environment if you write code that needs to be tested.
-2. Installing molecule is way easier in a python virtual environment.
-3. Have docker on your host and remote system installed. It makes life easier.
+1. Installing molecule is way easier in a python virtual environment.
+2. Have docker on your host and remote system installed. It makes life easier.
 
 # License
 This project is licensed under the MIT License - see the LICENSE file for details.
