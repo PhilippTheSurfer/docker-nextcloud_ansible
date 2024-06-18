@@ -36,6 +36,9 @@ ansible-galaxy collection install -r requirements.yml
 
 ## Repository Structure
 
+<details>
+  <summary>Code Structure</summary>
+
 ```
 .
 ├── BuildDockerTestImage/
@@ -74,6 +77,8 @@ ansible-galaxy collection install -r requirements.yml
 ├── requirements.yml
 └── vault.yml
 ```
+
+</details>
 
 ## Configuration
 
@@ -139,6 +144,10 @@ docker build -t localhost/debian12-ansible:latest .
 ```
 
 ## Configuring Molecule
+
+<details>
+  <summary>Running Molecule Tests</summary>
+
 Ensure your `molecule/default/molecule.yml` is configured to use the custom Docker image.
 
 ## Running Molecule Tests
@@ -158,7 +167,7 @@ Ensure your `molecule/default/molecule.yml` is configured to use the custom Dock
     ```bash
     molecule destroy
     ```
-
+</details>
 
 # Contributing
 Feel free to open issues or submit pull requests with improvements or fixes. Contributions are always welcome!
