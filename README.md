@@ -145,6 +145,12 @@ docker build -t localhost/debian12-ansible:latest .
 
 ## Configuring Molecule
 
+In order to create a molecule test setup go into the roles directory you want to test. There you can execute the command:
+```bash
+molecule init scenario --scenario-name default --driver-name docker
+```
+This command calls the molecule plugin to create a scenario called `default` with `docker` as the driver that shell be used to create the test environment later while executing the `molecule create` command. It could also be `aws`, `kubernetes` or similar container Software tools.
+
 <details>
   <summary>Running Molecule Tests</summary>
 
