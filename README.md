@@ -19,6 +19,7 @@ Creates a dumb of a localy or nativ running mysql instance and deployes it in a 
 - [Docker and Docker Compose](https://docs.docker.com/)
 - [Molecule 3.0+](https://ansible.readthedocs.io/projects/molecule/)
 - [Python 3.11+](https://realpython.com/installing-python/)
+- [Nginx-Proxy-Manager with Openresty](https://github.com/PhilippTheSurfer/docker-NPM-Openresty_ansible)
 
 ### create local env and install dependences:
 Run the following commands before editing code to run the python env and install ansible-molecule:
@@ -97,7 +98,7 @@ Define your inventory in `inventories/hosts.yml` to specify the target hosts for
 # Using the Roles
 ## Setup
 1. **Define Variables**: Ensure all required variables are set in `group_vars/all.yml`.
-2. **Templates**: Customize the templates in `roles/{{ roles }}/templates/` as needed.
+2. **Templates**: Customize the templates in `roles/{{ role_name }}/templates/` as needed.
 
 # Running the Playbook
 
@@ -136,7 +137,7 @@ all:
 
 # Testing with [Molecule](https://ansible.readthedocs.io/projects/molecule/)
 ### Building the Docker Image
-Use the Dockerfile in the `roles/deploy` directory to build a testing image.
+Use the Dockerfile in the `BuildDockerTestImage` directory to build a testing image.
 
 Build the Docker image:
 ```bash
